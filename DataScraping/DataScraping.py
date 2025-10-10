@@ -74,8 +74,6 @@ def fetch_ercot_lmp_2024(url: str = ERCOT_RTM_2024_URL, output_dir: str = RAW_DI
         '''rename the extracted Excel file to "price.xlsx"'''
 
         excel_files = [f for f in file_list if f.lower().endswith(".xlsx")]
-        if not excel_files:
-            logging.warning("No Excel file found to rename.")
 
         old_path = os.path.join(output_dir, excel_files[0])
         new_path = os.path.join(output_dir, "price.xlsx")
@@ -94,23 +92,27 @@ def extract_load_zip_2024(load_zip_path: str = os.path.join(RAW_DIR, "load", "lo
     and deletes only the 366 sub-zip files.
     The main load.zip is preserved for reproducibility.
     '''
-    # Define paths
+
+    '''Define paths'''
     load_dir = os.path.dirname(load_zip_path)
     raw_data_dir = os.path.join(load_dir, "load_raw_data")
     os.makedirs(raw_data_dir, exist_ok=True)
 
-    # Step 1 — Extract the main load.zip (contains 366 smaller zips)
+    '''Extract the main load.zip (contains 366 smaller zips)'''
     logging.info(f"Extracting main ZIP: {load_zip_path}")
     with zipfile.ZipFile(load_zip_path, "r") as zf:
         zf.extractall(load_dir)
         logging.info(f"Extracted {len(zf.namelist())} sub-zips into {load_dir}")
 
-    # Step 2 — Find all sub-zip files
-    sub_zips = glob.glob(os.path.join(load_dir, "*.zip"))
+    '''Find all sub-zip files except the original load.zip'''
+    sub_zips = [
+        f for f in glob.glob(os.path.join(load_dir, "*.zip"))
+        if os.path.abspath(f) != os.path.abspath(load_zip_path)
+    ]
     total = len(sub_zips)
     logging.info(f"Found {total} sub-zip files. Extracting them into {raw_data_dir}...")
 
-    # Step 3 — Extract each sub-zip into load_raw_data/
+    '''Extract each sub-zip into load_raw_data/'''
     for idx, sub_zip in enumerate(sub_zips, start=1):
         try:
             with zipfile.ZipFile(sub_zip, "r") as sub_zf:
@@ -120,8 +122,11 @@ def extract_load_zip_2024(load_zip_path: str = os.path.join(RAW_DIR, "load", "lo
         except zipfile.BadZipFile:
             logging.warning(f"⚠️ Skipped invalid ZIP: {sub_zip}")
 
-    # Step 4 — Final message
     logging.info("✅ All sub-zips extracted to 'load_raw_data' and removed successfully.")
+    logging.info(f"✅ Main ZIP preserved at {load_zip_path}")
+
+
+
 
 '''
 ---------------------------------------------------------------
