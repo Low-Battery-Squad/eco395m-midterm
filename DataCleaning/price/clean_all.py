@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 RAW_DIR = "DataScraping/Rawdata"
-OUT_DIR = "DataScraping/CleanData"
+OUT_DIR = "DataCleaning/price"
 
 def clean_price():
     src = os.path.join(RAW_DIR, "price", "Price.xlsx")
@@ -12,7 +12,6 @@ def clean_price():
     xls = pd.ExcelFile(src) #Obtain it in months
     df = pd.concat(pd.read_excel(xls, sheet_name=s) for s in xls.sheet_names)
 
-    # 只保留 HB_BUSAVG
     df = df[df["Settlement Point Name"] == "HB_BUSAVG"] #keep HB_BUSAVG only
 
     df["Delivery Date"] = pd.to_datetime(df["Delivery Date"])
