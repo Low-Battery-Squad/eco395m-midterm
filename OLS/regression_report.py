@@ -1,92 +1,97 @@
-import pandas as pd
+# regression_report.py
+from pathlib import Path
 import pickle
-import statsmodels.api as sm
+import pandas as pd
+import numpy as np
 
+# ---------- Portable, repo-relative paths ----------
+BASE_DIR   = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / "ols_model.pkl"
+DATA_PATH  = BASE_DIR / "preprocessed_data.csv"
+REPORT_PATH = BASE_DIR / "ols_regression_report.md"
 
-def generate_regression_report(model_path: str = "/Users/szs/eco395m-midterm/OLS/ols_model.pkl",
-                               data_path: str = "/Users/szs/eco395m-midterm/OLS/preprocessed_data.csv",
-                               report_path: str = "/Users/szs/eco395m-midterm/OLS/ols_regression_report.md"):
-    """
-    Generate a structured markdown report for the OLS regression analysis.
-    The report includes data overview, model specification, results interpretation, and conclusions.
+def generate_regression_report(model_path: Path = MODEL_PATH,
+                               data_path: Path = DATA_PATH,
+                               report_path: Path = REPORT_PATH) -> Path:
+    if not model_path.exists():
+        raise FileNotFoundError(f"Missing model at {model_path}. Run `python ols_regression.py` first.")
+    if not data_path.exists():
+        raise FileNotFoundError(f"Missing data at {data_path}. Run `python data_loader.py` first.")
 
-    Args:
-        model_path (str): Path to the saved OLS model (default: "./ols_model.pkl")
-        data_path (str): Path to preprocessed data (default: "./preprocessed_data.csv")
-        report_path (str): Path to save the markdown report (default: "./ols_regression_report.md")
-    """
-    # Load fitted model and preprocessed data
     with open(model_path, "rb") as f:
         model = pickle.load(f)
+
     df = pd.read_csv(data_path)
 
-    # Extract key regression statistics
-    coefs = model.params
-    p_values = model.pvalues
-    r2 = model.rsquared
-    adj_r2 = model.rsquared_adj
-    f_stat = model.fvalue
-    f_pval = model.f_pvalue
-    n_obs = model.nobs  # Number of observations
+    # --- Collect model stats (robust to different statsmodels types) ---
+    dep_var   = getattr(model.model, "endog_names", "y")
+    nobs      = getattr(model, "nobs", len(getattr(model.model, "endog", [])))
+    r2        = getattr(model, "rsquared", None)
+    r2_adj    = getattr(model, "rsquared_adj", None)
+    aic       = getattr(model, "aic", None)
+    bic       = getattr(model, "bic", None)
+    fvalue    = getattr(model, "fvalue", None)
+    f_pvalue  = getattr(model, "f_pvalue", None)
 
-    # Define significance labels for coefficients
-    def get_significance(p_val):
-        if p_val < 0.01:
-            return "***"
-        elif p_val < 0.05:
-            return "**"
-        elif p_val < 0.1:
-            return "*"
-        else:
-            return "ns"
+    # Coeff table
+    params = model.params
+    conf   = model.conf_int()
+    pvals  = model.pvalues
+    coef_df = pd.DataFrame({
+        "coef": params,
+        "std_err": getattr(model, "bse", pd.Series(index=params.index, dtype=float)),
+        "t_or_z": getattr(model, "tvalues", pd.Series(index=params.index, dtype=float)),
+        "p_value": pvals,
+        "ci_low": conf[0],
+        "ci_high": conf[1],
+    })
+    coef_df = coef_df.rename_axis("term").reset_index()
+    coef_df = coef_df.round(6)
 
-    # Construct markdown report content
-    report_content = f"""# OLS Regression Analysis Report
-## 1. Background and Model Specification
-### 1.1 Data Overview
-- Time range: January 1, 2024 to December 30, 2024 (total {n_obs} observations)
-- Key variables:
-  - Dependent variable: `ln(Price_t)` (Natural logarithm of electricity price)
-  - Independent variables:
-    - `ln(Load_t)` (Natural logarithm of electricity load)
-    - `CDD_t` (Cooling Degree Days, measures summer cooling demand)
-    - `HDD_t` (Heating Degree Days, measures winter heating demand)
-    - `RenewableShare_t` (Share of renewable energy in total supply)
+    # Markdown table for coefficients (first 120 terms to keep file reasonable)
+    def to_md_table(df: pd.DataFrame, max_rows: int = 120) -> str:
+        show = df.head(max_rows)
+        return show.to_markdown(index=False)
 
-### 1.2 Regression Model Formula
-The OLS regression model used in this analysis is consistent with the requirements:
-    Where:
-    - β₀: Constant term (intercept)
-    - β₁~β₄: Regression coefficients for independent variables
-    - ε_t: Random error term (residuals)
+    # Build markdown
+    lines = []
+    lines.append(f"# OLS Regression Report")
+    lines.append("")
+    lines.append(f"- **Working dir**: `{BASE_DIR}`")
+    lines.append(f"- **Model file** : `{model_path.name}`")
+    lines.append(f"- **Data file**  : `{data_path.name}`")
+    lines.append("")
+    lines.append("## Model Summary (key stats)")
+    lines.append("")
+    lines.append("| metric | value |")
+    lines.append("|---|---:|")
+    lines.append(f"| Dependent var | `{dep_var}` |")
+    lines.append(f"| N (obs) | {int(nobs) if pd.notna(nobs) else 'NA'} |")
+    lines.append(f"| R² | {r2:.6f} |" if r2 is not None else "| R² | NA |")
+    lines.append(f"| Adj. R² | {r2_adj:.6f} |" if r2_adj is not None else "| Adj. R² | NA |")
+    lines.append(f"| F-stat | {fvalue:.6f} |" if fvalue is not None else "| F-stat | NA |")
+    lines.append(f"| Prob(F) | {f_pvalue:.6g} |" if f_pvalue is not None else "| Prob(F) | NA |")
+    lines.append(f"| AIC | {aic:.6f} |" if aic is not None else "| AIC | NA |")
+    lines.append(f"| BIC | {bic:.6f} |" if bic is not None else "| BIC | NA |")
+    lines.append("")
+    lines.append("## Coefficients")
+    lines.append("")
+    lines.append(to_md_table(coef_df))
+    lines.append("")
+    lines.append("> Note: Values rounded to 6 decimals. Confidence intervals are usually 95% by default in statsmodels.")
 
-    ## 2. Key Regression Results
-    ### 2.1 Model Goodness of Fit
-    - R-squared: {r2:.4f} → The model explains {r2 * 100:.2f}% of the variance in the dependent variable
-    - Adjusted R-squared: {adj_r2:.4f}
-    - F-statistic: {f_stat:.4f}, P-value: {f_pval:.6f} → {'Model is overall significant (P<0.05)' if f_pval < 0.05 else 'Model is not overall significant (P≥0.05)'}
+    # Save
+    report_text = "\n".join(lines)
+    report_path.write_text(report_text, encoding="utf-8")
+    print(f"[done] Wrote report → {report_path}")
+    return report_path
 
-    ### 2.2 Regression Coefficients and Significance
-    | Variable                | Coefficient(β) | P-Value   | Significance | Interpretation                                                                 |
-    |-------------------------|----------------|-----------|--------------|--------------------------------------------------------------------------------|
-    | Constant Term (β₀)      | {coefs["const"]:.4f} | {p_values["const"]:.6f} | {get_significance(p_values["const"])} | Baseline value of ln(Price) when all independent variables are 0 |
-    | ln(Load_t) (β₁)         | {coefs["ln_Load"]:.4f} | {p_values["ln_Load"]:.6f} | {get_significance(p_values["ln_Load"])} | A 1% increase in load leads to a {coefs["ln_Load"] * 100:.2f}% average change in price (elasticity) |
-    | CDD_t (β₂)              | {coefs["CDD_t"]:.4f} | {p_values["CDD_t"]:.6f} | {get_significance(p_values["CDD_t"])} | A 1-unit increase in CDD leads to a {coefs["CDD_t"]:.4f} average change in ln(Price) |
-    | HDD_t (β₃)              | {coefs["HDD_t"]:.4f} | {p_values["HDD_t"]:.6f} | {get_significance(p_values["HDD_t"])} | A 1-unit increase in HDD leads to a {coefs["HDD_t"]:.4f} average change in ln(Price) |
-    | RenewableShare_t (β₄)   | {coefs["RenewableShare_t"]:.4f} | {p_values["RenewableShare_t"]:.6f} | {get_significance(p_values["RenewableShare_t"])} | A 1-unit increase in renewable share leads to a {coefs["RenewableShare_t"]:.4f} average change in ln(Price) |
-
-    *Significance notes: *** p<0.01, ** p<0.05, * p<0.1, ns = not significant
-
-    """
-
-    # Save report to markdown file
-    with open(report_path, "w", encoding="utf-8") as f:
-        f.write(report_content)
-    print(f"Regression report saved to {report_path}")
-    print("\nReport Preview (first 500 characters):")
-    print(report_content[:500] + "...")
-
-
-# Generate report when running this script independently
-if __name__ == "__main__":
+def main():
+    print(f"[info] BASE_DIR   = {BASE_DIR}")
+    print(f"[info] MODEL_PATH = {MODEL_PATH}")
+    print(f"[info] DATA_PATH  = {DATA_PATH}")
+    print(f"[info] REPORT_OUT = {REPORT_PATH}")
     generate_regression_report()
+
+if __name__ == "__main__":
+    main()
