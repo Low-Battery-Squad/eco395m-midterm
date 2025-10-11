@@ -40,7 +40,7 @@ Each CSV contains hourly system loads for all ERCOT weather zones, including col
 **4. Variable: CDD/HDD_t**  
   
 Source: NOAA Climate Data Online (CDO) API.  
-Download method: API retrieval through authenticated requests using a NOAA token stored in .env.  
+Download method: API retrieval through authenticated requests using a NOAA token stored in .env. This file was not commited to Github and a private token is needed for reproduction.
 Saved file: Rawdata/CDD_HDD/noaa_raw.csv  
   
 Daily temperature observations for 2024 were collected from four representative weather stations corresponding to ERCOT regions: Houston, North, South, and West.  
