@@ -17,7 +17,7 @@
 ## 1. Background  
 
 ## 2. Data Scraping
-This file describes the data cleaning stage for the midterm project.  
+This part describes the data cleaning stage for the midterm project.  
 All cleaning operations are by using Python to ensure reproducibility.  
 The cleaned output serves as the foundation for OLS and visualization.
 
