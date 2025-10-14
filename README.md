@@ -1,6 +1,6 @@
 # ECO 395m Midterm Project: Texas Energy Market Analytics
 
-**Group Members:** Linyao(Bob) Ni, 
+**Group Members:** Linyao(Bob) Ni, Zhifang Luo, 
 
 ## 0. Instructions for Re-running the Code
 
@@ -23,7 +23,7 @@ The cleaned output serves as the foundation for OLS and visualization.
 
 ---
 
-## 1. Overview of Cleaning Process
+## 2.1 Overview of Cleaning Process
 
 The cleaning process follows three main steps:
 
@@ -39,7 +39,7 @@ The cleaning process follows three main steps:
 
 ---
 
-## 2. The Script
+## 2.2 The Script
 
 **Purpose:**  
 The main script automates the entire cleaning pipeline — reading, merging, transforming, and saving the final processed dataset.
