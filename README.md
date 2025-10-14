@@ -104,6 +104,20 @@ Each variable have a corresbonding script prresented in the folder, which can be
 **Other Operations:**
 - Removes duplicates and invalid rows  
 - Renames inconsistent columns
+
+---
+
+Below is a summary of how each major variable was cleaned and prepared for analysis:
+
+| Variable | Source | Cleaning Steps | Notes |
+|-----------|---------|----------------|-------|
+| **price_t** | ERCOT MIS "Real-Time Market Load Zone and Hub Settlement Point Prices" | - Filtered for `Settlement Point Name = HB_BUSAVG` to represent ERCOT-wide average price.<br> - Aggregated hourly prices to daily averages.<br> - Applied logarithmic transformation to stabilize variance. | Final variable used as `log(price_t)` in OLS regression. |
+| **sales_t** | ERCOT Residential Load Data | - Aggregated monthly residential electricity sales and normalized by population.<br> - Interpolated to daily frequency using linear interpolation.<br> - Checked for negative or missing values and filled forward if necessary. | Represents per-capita daily residential electricity consumption. |
+| **income_t** | Bureau of Economic Analysis (BEA) – State Personal Income | - Deflated by CPI to obtain real income.<br> - Converted to per-capita units.<br> - Interpolated monthly to daily frequency. | Used to capture income effects on electricity demand. |
+| **gas_price_t** | U.S. Energy Information Administration (EIA) – Residential Natural Gas Prices | - Deflated to real 2023 USD.<br> - Interpolated to daily frequency.<br> - Smoothed to remove irregular jumps. | Serves as substitute/complement variable for energy cost. |
+| **cdd_t** | NOAA Climate Data Online (CDO) API | - Calculated daily Cooling Degree Days from temperature data.<br> - Checked range validity (0–30 typical daily range).<br> - Missing entries filled by 7-day moving average. | Reflects cooling demand intensity. |
+| **hdd_t** | NOAA Climate Data Online (CDO) API | - Calculated daily Heating Degree Days from temperature data.<br> - Removed negative and extreme outliers (>50).<br> - Smoothed using 3-day rolling average. | Reflects heating demand intensity. |
+
 ## 4. Data Analysis(OLS Model)  
 
 ## 5. Result and Visualization
