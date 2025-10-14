@@ -17,12 +17,6 @@
 ## 1. Background  
 
 ## 2. Data Scraping  
-
-**Data Scraping Documentation** 
-
-This document describes the data collection process. Each variable represents a key input in the econometric model and corresponds to a distinct dataset retrieved from public sources.  
-All raw data are stored in the DataScraping/Rawdata directory. Except for the load-related data, which must be downloaded manually from the ERCOT website,
-running the DataScraping.py file will automatically retrieve and organize all other datasets.
   
 **1. Overview of Data Sources**
 
