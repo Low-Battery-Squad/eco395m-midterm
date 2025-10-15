@@ -157,8 +157,6 @@ Below is a summary of how each major variable was cleaned and prepared for analy
 ## 4. Data Analysis(OLS Model)  
 
 ## 5. Result and Visualization
-# Midterm OLS — Results & Visualizations
-
 This folder estimates a simple price model on daily data and visualizes the fit.
 
 - **Data window:** 364 observations (after dropping 1 row with negative price)
