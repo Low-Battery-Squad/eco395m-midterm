@@ -88,7 +88,7 @@ The cleaned output serves as the foundation for OLS and visualization.
 
 ---
 
-## 3.1 Overview of Cleaning Process
+### 3.1 Overview of Cleaning Process
 
 The cleaning process follows three main steps:
 
@@ -104,7 +104,7 @@ The cleaning process follows three main steps:
 
 ---
 
-## 3.2 The Script
+### 3.2 The Script
 
 **Purpose:**  
 The main script automates the entire cleaning pipeline — reading, merging, transforming, and saving the final processed dataset.
