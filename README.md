@@ -29,6 +29,17 @@ This combined file is then used by the OLS module for regression and visualizati
 **Data Analysis**  
     
 **Data Visualization**
+- Generate the figures for model fit, coefficients, and residual diagnostics:
+
+```bash
+cd OLS
+python3 result_visual.py        # creates ols_fitted_actual.png (and coeff plot if scripted)
+python3 regression_report.py    # ensures table + stats are up to date
+open ols_fitted_actual.png
+open ols_coefficients_plot.png
+open ols_residuals_analysis.png
+open ols_regression_report.md
+```
 
 ## 1. Background  
 
