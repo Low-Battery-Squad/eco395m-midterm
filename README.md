@@ -6,7 +6,7 @@
 
 * To reproduce the results of our analysis, follow the steps below:
 
-**Data Collection**  
+### Data Collection  
 - This project’s entire data collection process is handled in **DataScraping/DataScraping.py**.
 The “Load” dataset must be downloaded manually then proceeded, and the NOAA API requires an authentication token to access weather data (TMIN, TMAX, TAVG).
 We must register and set it up locally before running the script.  
@@ -73,7 +73,7 @@ DataScraping/Rawdata/
 ```
 
   
-**Data Preprocessing**
+### Data Preprocessing
 - Enter the `DataCleaning` folder and execute cleaning scripts in sequence:
 
 ```bash
@@ -91,9 +91,9 @@ CDD_HDD_Clean.csv → climate indicators
 RenewableShare_Clean.csv → share of renewables
 This combined file is then used by the OLS module for regression and visualization.
 
-**Data Analysis**  
+### Data Analysis  
     
-**Data Visualization**
+### Data Visualization
 - Generate the figures for model fit, coefficients, and residual diagnostics:
 
 ```bash
