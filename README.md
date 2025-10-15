@@ -1,6 +1,6 @@
 # ECO 395m Midterm Project: Texas Energy Market Analytics
 
-**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Jiajie Wang
+**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Jiajie Wang, Zongshuai Shen
 
 ## 0. Instructions for Re-running the Code
 
@@ -155,6 +155,79 @@ Below is a summary of how each major variable was cleaned and prepared for analy
 | **hdd_t** | NOAA Climate Data Online (CDO) API | - Calculated daily Heating Degree Days from temperature data.<br>  - Smoothed using 3-day rolling average. | Reflects heating demand intensity. |
 
 ## 4. Data Analysis(OLS Model)  
+
+This section details the empirical strategy and implementation of the OLS regression model used to examine the determinants of daily electricity prices in the ERCOT market.
+
+### 4.1 Model Specification
+
+We estimate the following baseline model:
+
+ln(Price_t) = β0 + β1 * ln(Load_t) + β2 * CDD_t + β3 * HDD_t + β4 * RenewableShare_t + ε_t
+
+- **Dependent variable:** ln(Price) — the natural log of daily average wholesale prices.  
+- **Main regressor:** ln(Load) — daily total system load (log-transformed), capturing demand pressure.  
+- **Climate controls:** CDD (Cooling Degree Days) and HDD (Heating Degree Days) — weather-driven energy demand.  
+- **Supply-side variable:** RenewableShare — proportion of renewables in total daily generation.
+
+The log-log functional form allows interpreting β1 directly as **price elasticity** with respect to system load.
+
+---
+
+### 4.2 Regression Procedure
+
+The OLS estimation is implemented in Python using `pandas` and `statsmodels`, and follows these steps:
+
+1. **Data Loading:**  
+   Load the cleaned and merged dataset (`preprocessed_data.csv`) containing all variables aligned on daily frequency.
+
+2. **Variable Definition:**  
+   - `ln_Price` as the dependent variable  
+   - `ln_Load`, `CDD_t`, `HDD_t`, and `RenewableShare_t` as independent variables  
+   - A constant term is added using `sm.add_constant()`.
+
+3. **Model Fitting:**  
+   Use `sm.OLS(y, X_with_const).fit()` to estimate the model.  
+   The summary output provides coefficients, standard errors, p-values, R², F-statistics, and other key diagnostics.
+
+4. **Significance Testing:**  
+   - Individual significance is assessed using t-tests.  
+   - Overall model significance is assessed using an F-test.  
+   - Conventional significance stars are assigned (*** p<0.01, ** p<0.05, * p<0.1).
+
+---
+
+### 4.3 Diagnostic Tests
+
+To verify OLS assumptions and model validity, several diagnostic checks are performed:
+
+- **Durbin–Watson test:**  
+  Tests for autocorrelation in residuals. Values close to 2 indicate no serial correlation.
+
+- **Residual distribution analysis:**  
+  Histograms and time plots are used to check whether residuals are centered around zero and approximately normal.
+
+- **Goodness of fit:**  
+  R² and adjusted R² summarize model fit. The F-statistic confirms whether regressors are jointly significant.
+
+- **Multicollinearity & omitted variables:**  
+  Variables are chosen to minimize omitted variable bias. Additional checks (e.g., VIF) can be added for robustness.
+
+---
+
+### 4.4 Output and Reproducibility
+
+The pipeline automatically:
+
+- Exports regression coefficients and significance levels to `ols_coefficients.csv`  
+- Saves the fitted model as `ols_model.pkl` for reuse without refitting  
+- Generates visual outputs:
+  - `ols_fitted_actual.png` — Actual vs. fitted ln(Price)  
+  - `ols_coefficients_plot.png` — coefficient plot with confidence intervals  
+  - Residual diagnostics figures  
+- Creates a markdown report (`ols_regression_report.md`) summarizing key statistics
+
+This structured process ensures full reproducibility and allows for easy extensions such as adding lag structures, interaction terms, or robustness checks.
+
 
 ## 5. Result and Visualization
 This folder estimates a simple price model on daily data and visualizes the fit.
