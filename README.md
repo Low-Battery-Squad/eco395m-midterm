@@ -18,7 +18,14 @@ python3 load_clean.py          # Clean residential load data
 python3 cdd_hdd_clean.py       # Compute and clean CDD/HDD (cooling/heating degree days)
 python3 renew_share_clean.py   # Clean renewable energy share data
 python3 merge_all.py           # Merge all cleaned files into one dataset (ALL_IN_ONE.csv)
-cd ..
+```
+The final merged dataset ALL_IN_ONE.csv contains cleaned daily observations for 2024, including:
+Price_Clean.csv → electricity prices
+Load_Clean.csv → residential load
+CDD_HDD_Clean.csv → climate indicators
+RenewableShare_Clean.csv → share of renewables
+This combined file is then used by the OLS module for regression and visualization.
+
 **Data Analysis**  
     
 **Data Visualization**
