@@ -1,12 +1,38 @@
 # ECO 395m Midterm Project: Texas Energy Market Analytics
 
-**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Jiajie Wang, Zongshuai Shen
+**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Jiajie Wang
 
 ## 0. Instructions for Re-running the Code
 
-* To reproduce the results of our flight delay prediction analysis, follow the steps below:(这里改一下)
+* To reproduce the results of our analysis, follow the steps below:
 
 **Data Collection**  
+- This project’s entire data collection process is handled in **DataScraping/DataScraping.py**.
+The “Load” dataset must be downloaded manually then proceeded, and the NOAA API requires an authentication token to access weather data (TMIN, TMAX, TAVG).
+We must register and set it up locally before running the script.  
+All other data can be automatically downloaded and organized by running this single script.
+
+**1.Downloading and Preparing the Load Dataset**
+Visit the ERCOT official website:  
+https://www.ercot.com/mktinfo/load
+
+On the page, set the parameters as follows:
+
+Posted Start Date: 2024/01/01 00:00
+
+Posted End Date: 2024/12/31 23:59
+
+Click Update and confirm that 366 daily records for 2024 appear.
+
+Click Download (Limit 1,000) to get the ZIP file containing 366 smaller daily ZIPs.
+
+Rename the file to load.zip.
+
+Place it in the following directory (create folders if they don’t exist):
+  ```bash
+cd DataScraping
+Rawdata/load/load.zip
+
   
 **Data Preprocessing**
 - Enter the `DataCleaning` folder and execute cleaning scripts in sequence:
