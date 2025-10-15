@@ -261,29 +261,6 @@ This folder estimates a simple price model on daily data and visualizes the fit.
 - **Data window:** 364 observations (after dropping 1 row with negative price)
 - **Pipeline:** `data_loader.py` → `ols_regression.py` → `result_visual.py` → `regression_report.py`
 - **Outputs:** coefficients CSV and plot, fitted vs. actual plot, residual diagnostics, markdown report
-
----
-
-## Model
-
-We estimate:
-
-\[
-\ln(\text{Price})_t = \beta_0
-+ \beta_1 \ln(\text{Load})_t
-+ \beta_2 \text{CDD}_t
-+ \beta_3 \text{HDD}_t
-+ \beta_4 \text{RenewableShare}_t
-+ \varepsilon_t
-\]
-
-- Dependent variable: **ln(Price)**
-- Regressors: **ln(Load)**, **CDD**, **HDD**, **RenewableShare**  
-- Exact column detection is automatic in the scripts (case-insensitive, allows suffixes like `_t`).
-
-📄 Full numeric summary (R², AIC/BIC, F-test, coefficients) is in **`OLS/ols_regression_report.md`**.  
-Raw coefficients are also saved to **`OLS/ols_coefficients.csv`**.
-
 ---
 
 ## Key Findings (from the figures)
