@@ -146,6 +146,98 @@ Below is a summary of how each major variable was cleaned and prepared for analy
 ## 4. Data Analysis(OLS Model)  
 
 ## 5. Result and Visualization
+# Midterm OLS — Results & Visualizations
+
+This folder estimates a simple price model on daily data and visualizes the fit.
+
+- **Data window:** 364 observations (after dropping 1 row with negative price)
+- **Pipeline:** `data_loader.py` → `ols_regression.py` → `result_visual.py` → `regression_report.py`
+- **Outputs:** coefficients CSV and plot, fitted vs. actual plot, residual diagnostics, markdown report
+
+---
+
+## Model
+
+We estimate:
+
+\[
+\ln(\text{Price})_t = \beta_0
++ \beta_1 \ln(\text{Load})_t
++ \beta_2 \text{CDD}_t
++ \beta_3 \text{HDD}_t
++ \beta_4 \text{RenewableShare}_t
++ \varepsilon_t
+\]
+
+- Dependent variable: **ln(Price)**
+- Regressors: **ln(Load)**, **CDD**, **HDD**, **RenewableShare**  
+- Exact column detection is automatic in the scripts (case-insensitive, allows suffixes like `_t`).
+
+📄 Full numeric summary (R², AIC/BIC, F-test, coefficients) is in **`OLS/ols_regression_report.md`**.  
+Raw coefficients are also saved to **`OLS/ols_coefficients.csv`**.
+
+---
+
+## Key Findings (from the figures)
+
+- **ln(Load):** Large **positive** and statistically significant effect (95% CI well above zero).  
+  *Interpretation (elasticity):* a 1% increase in load is associated with roughly a ~2% increase in price (see exact value in the report).
+
+- **RenewableShare:** **Negative** and statistically significant (95% CI well below zero).  
+  *Interpretation:* higher renewable share is associated with lower prices.  
+  *Units note:* if `RenewableShare` is a **share in [0,1]**, the coefficient is the semi-elasticity wrt a 1.0 change in share. If it’s **percentage points [0,100]**, divide the coefficient by 100 to get the effect per 1pp.
+
+- **CDD / HDD:** Coefficients are very close to zero with tight confidence intervals that include zero → limited incremental effect once load and renewable share are controlled for (consistent with load absorbing most weather demand).
+
+- **Fit quality:** The **Actual vs. Fitted** plot shows the fitted series tracks the main movements of ln(Price).  
+  Residuals look roughly centered and bell-shaped; a few spikes/outliers appear over time (see residual diagnostics below). Exact fit metrics are in the markdown report.
+
+---
+
+## Visualizations
+
+### 1) Coefficients with 95% CIs
+![OLS Coefficients](OLS/ols_coefficients_plot.png)
+
+- Bars show point estimates; whiskers show 95% confidence intervals.
+- Dashed line at 0 is the null. ln(Load) > 0 and RenewableShare < 0 are clearly significant.
+
+### 2) Actual vs. Fitted ln(Price)
+![Actual vs Fitted](OLS/ols_fitted_actual.png)
+
+- Blue: actual ln(Price); Orange dashed: fitted ln(Price).
+- Fitted series captures broad swings with some deviation around price spikes.
+
+### 3) Residual Diagnostics
+![Residual Diagnostics](OLS/ols_residuals_analysis.png)
+
+- **Histogram (left):** residuals approximately normal, centered near zero.
+- **Time plot (right):** residuals fluctuate around zero with a few spikes; consider HAC/Newey-West SEs and/or adding lags/seasonal controls if serial correlation is a concern.
+
+---
+
+## Reproducibility (how to rerun)
+
+From the repo root (macOS):
+
+```bash
+cd OLS
+# 1) set up env
+/usr/bin/python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip pandas numpy matplotlib statsmodels
+
+# 2) preprocess (defaults to ../DataCleaning/ALL_IN_ONE.csv; drops negative prices)
+python data_loader.py
+
+# 3) estimate and save model + coefficients/residuals plot
+python ols_regression.py
+
+# 4) make figures
+python result_visual.py
+
+# 5) write markdown report
+python regression_report.py
 
 ## 6. Conclusion 
 
