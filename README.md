@@ -1,6 +1,6 @@
 # ECO 395m Midterm Project: Texas Energy Market Analytics
 
-**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Jiajie Wang
+**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Zongshuai Shen, Jiajie Wang
 
 ## 0. Instructions for Re-running the Code
 
@@ -12,26 +12,64 @@ The “Load” dataset must be downloaded manually then proceeded, and the NOAA 
 We must register and set it up locally before running the script.  
 All other data can be automatically downloaded and organized by running this single script.
 
-**1.Downloading and Preparing the Load Dataset**
-Visit the ERCOT official website:  
+**1.Downloading and Preparing the Load Dataset**  
+
+1. Visit the ERCOT official website:  
 https://www.ercot.com/mktinfo/load
 
-On the page, set the parameters as follows:
-
+2. On the page, set the parameters as follows:
 Posted Start Date: 2024/01/01 00:00
-
 Posted End Date: 2024/12/31 23:59
-
 Click Update and confirm that 366 daily records for 2024 appear.
-
 Click Download (Limit 1,000) to get the ZIP file containing 366 smaller daily ZIPs.
 
-Rename the file to load.zip.
+3. Rename the file to load.zip.
 
-Place it in the following directory (create folders if they don’t exist):
-  ```bash
+4. Place it in the following directory (create folders if they don’t exist): DataScraping/Rawdata/load/load.zip
+
+**2.Setting Up the NOAA Token and Environment File**    
+
+1.Go to the official NOAA CDO API registration page:  
+https://www.ncdc.noaa.gov/cdo-web/token
+
+2.Log in (or create a free NOAA account) and request a new token.  
+
+3.Inside the project root(DataScraping/) , create a new file named .env.  
+
+4.Add the following line and paste the token into it:
+```bash
+NOAA_TOKEN=*YOUR_NOAA_TOKEN_HERE*
+```
+
+**3.Running the Script and Locating Saved Raw Data**  
+Once both manual and credential steps are done, everything else is automatic. Just run the script:
+```bash
 cd DataScraping
-Rawdata/load/load.zip
+python DataScraping.py
+```
+The script will:
+
+Download and save ERCOT price data → Rawdata/price/Price.xlsx
+
+Extract the manually downloaded load data → Rawdata/load/load_raw_data/
+
+Fetch NOAA temperature data via API → Rawdata/CDD_HDD/noaa_raw.csv
+
+Download ERCOT renewable share data → Rawdata/RenewableShare/IntGenbyFuel2024.xlsx  
+
+Final directory structure after successful execution:  
+```graphql
+DataScraping/Rawdata/
+  ├─ price/
+  │   └─ Price.xlsx                  # ERCOT RTM price data
+  ├─ load/
+  │   ├─ load.zip                    # manually downloaded original file
+  │   └─ load_raw_data/              # 366 extracted load files
+  ├─ CDD_HDD/
+  │   └─ noaa_raw.csv                # raw temperature data (TMIN/TMAX/TAVG)
+  └─ RenewableShare/
+      └─ IntGenbyFuel2024.xlsx       # ERCOT fuel mix (renewable share)
+```
 
   
 **Data Preprocessing**
