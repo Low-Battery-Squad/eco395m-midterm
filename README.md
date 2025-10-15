@@ -134,4 +134,18 @@ Below is a summary of how each major variable was cleaned and prepared for analy
 ## 6. Conclusion 
 
 ## 7. limitation
+Although this project do builds a clean and reproducible econometric pipeline, several limitations remain due to data coverage, model scope, and probably code implementation.
 
+### 7.1 Data and Frequency Handling
+- The dataset covers **only one year (2024)**, which restricts the ability to analyze long-term trends, seasonal variations, or structural shifts in electricity consumption.  
+- Hourly ERCOT data are aggregated to **daily averages**, potentially smoothing out peak-load volatility and intraday price dynamics.   
+- Exogenous shocks are not modeled separately, unobserved variables(for example: policy) could bias the estimated relationships.
+
+### 7.2 Variable Construction and Model Specification
+- The current regression assumes a **linear relationship** between electricity demand and its determinants. This may oversimplify nonlinear behaviors or threshold effects.  
+- **Omitted variables**—such as household demographics, insulation quality, or regional policy differences—may cause biased or inconsistent parameter estimates.  
+- Residual diagnostics are not extensively reported, which limits inference reliability.
+
+### 7.3 Code and Reproducibility
+- Visualization scripts (`result_visual.py`) generate **static PNG plots** only; no interactive or dynamic exploration features are available.  
+- Many parts of the code comments are written somewhat vaguely, and different team members have differences in the format of the comments.
