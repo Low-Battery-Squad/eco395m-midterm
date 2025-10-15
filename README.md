@@ -1,6 +1,6 @@
 # ECO 395m Midterm Project: Texas Energy Market Analytics
 
-**Group Members:** Linyao(Bob) Ni, Zhifang Luo, 
+**Group Members:** Linyao(Bob) Ni, Zhifang Luo, Jiajie Wang
 
 ## 0. Instructions for Re-running the Code
 
