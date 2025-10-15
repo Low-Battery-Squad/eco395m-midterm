@@ -20,6 +20,7 @@
 The motivation for this study is to evaluate how consumer electricity usage is correlated to both economic and environmental factors. We want to examine the impact of seasonal or weather changes on electricity prices and explore the extent to which the proportion of renewable resources can affect prices. 
 Such understanding is essential for designing pricing policies, forecasting energy demand, and promoting energy efficiency within the Texas market.
 
+### Research Objective
 This project explores how residential electricity consumption in Texas responds to changes in actual load, ener category and climate conditions.  
 The work is part of an econometric analysis aimed at quantifying **price elasticity of demand** in the energy sector using real-world data.  
 By combining data from **ERCOT**, **NOAA**, and **BEA**, the project creates a continuous, cleaned dataset that allows for time-series regression and visualization.
