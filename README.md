@@ -18,6 +18,7 @@ python3 load_clean.py          # Clean residential load data
 python3 cdd_hdd_clean.py       # Compute and clean CDD/HDD (cooling/heating degree days)
 python3 renew_share_clean.py   # Clean renewable energy share data
 python3 merge_all.py           # Merge all cleaned files into one dataset (ALL_IN_ONE.csv)
+cd ..
 **Data Analysis**  
     
 **Data Visualization**
