@@ -305,7 +305,7 @@ This folder estimates a simple price model on daily data and visualizes the fit.
 ## Key Findings (from the figures)
 
 - **ln(Load):** Large **positive** and statistically significant effect (95% CI well above zero).  
-  *Interpretation (elasticity):* a 1% increase in load is associated with roughly a ~2% increase in price (see exact value in the report).
+  *Interpretation (elasticity):* a 1% increase in load is associated with roughly a ~2% increase in price .
 
 - **RenewableShare:** **Negative** and statistically significant (95% CI well below zero).  
   *Interpretation:* higher renewable share is associated with lower prices.  
@@ -314,7 +314,7 @@ This folder estimates a simple price model on daily data and visualizes the fit.
 - **CDD / HDD:** Coefficients are very close to zero with tight confidence intervals that include zero → limited incremental effect once load and renewable share are controlled for (consistent with load absorbing most weather demand).
 
 - **Fit quality:** The **Actual vs. Fitted** plot shows the fitted series tracks the main movements of ln(Price).  
-  Residuals look roughly centered and bell-shaped; a few spikes/outliers appear over time (see residual diagnostics below). Exact fit metrics are in the markdown report.
+  Residuals look roughly centered and bell-shaped; a few spikes/outliers appear over time . Exact fit metrics are in the markdown report.
 
 ---
 
@@ -339,6 +339,25 @@ This folder estimates a simple price model on daily data and visualizes the fit.
 - **Time plot (right):** residuals fluctuate around zero with a few spikes; consider HAC/Newey-West SEs and/or adding lags/seasonal controls if serial correlation is a concern.
 
 ## 6. Conclusion 
+
+Using 364 daily observations (after removing the single negative‐price day), our OLS results consistently show:
+
+- **Demand pressure dominates:** `ln(Load)` has a large, statistically significant **positive** effect on `ln(Price)`. Interpreted as an elasticity, a 1% increase in load raises price by roughly `β₁`% .  
+- **Renewables lower prices:** `RenewableShare` is **negative and significant**, consistent with a merit-order effect—when the renewable share is higher, marginal costs fall and market prices decline.
+- **Weather once-controls are small:** After controlling for load, **CDD/HDD** contribute little on average (tight CIs around zero), suggesting much of weather’s impact is already embedded in demand.  
+- **Reasonable fit with episodic spikes:** Fitted values track the broad movement of prices, but residual plots show a few spikes, likely corresponding to system events (for example: outages, congestion, fuel price shocks).
+
+**Implications.**  
+The price–demand elasticity and the negative renewable coefficient imply that periods of high demand are expensive, while higher renewable penetration tends to moderate prices. For planning and policy, this supports investments that (i) dampen peak demand (efficiency, demand response) and (ii) expand low-marginal-cost renewable capacity and its integration.
+
+**Extensions / robustness to consider.**
+- Use **HAC/Newey–West** SEs; test AR terms or a dynamic model.  
+- Add controls: **natural gas prices**, fuel availability, seasonal/weekday fixed effects, holidays.  
+- Clarify the scale of `RenewableShare` (0–1 vs 0–100) and re-express coefficients as elasticities/semi-elasticities per 1pp.  
+- Out-of-sample evaluation and stability checks.  
+- Explore interactions (for example: `ln(Load) × season`) and distributional robustness.
+
+Overall, the analysis provides clear evidence that **demand increases prices** and **renewables reduce them**, with a model that captures the main trends while leaving identifiable, policy-relevant episodes for further study.  
 
 ## 7. limitation
 Although this project do builds a clean and reproducible econometric pipeline, several limitations remain due to data coverage, model scope, and probably code implementation.
