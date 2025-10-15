@@ -13,7 +13,7 @@ We must register and set it up locally before running the script.
 All other data can be automatically downloaded and organized by running this single script.
 
 **1.Downloading and Preparing the Load Dataset**  
-
+  
 1. Visit the ERCOT official website:  
 https://www.ercot.com/mktinfo/load
 
@@ -28,20 +28,21 @@ Click Download (Limit 1,000) to get the ZIP file containing 366 smaller daily ZI
 4. Place it in the following directory (create folders if they don’t exist): DataScraping/Rawdata/load/load.zip
 
 **2.Setting Up the NOAA Token and Environment File**    
-
-1.Go to the official NOAA CDO API registration page:  
+  
+1. Go to the official NOAA CDO API registration page:  
 https://www.ncdc.noaa.gov/cdo-web/token
 
-2.Log in (or create a free NOAA account) and request a new token.  
+2. Log in (or create a free NOAA account) and request a new token.  
 
-3.Inside the project root(DataScraping/) , create a new file named .env.  
+3. Inside the project root(DataScraping/) , create a new file named .env.  
 
-4.Add the following line and paste the token into it:
+4. Add the following line and paste the token into it:
 ```bash
 NOAA_TOKEN=*YOUR_NOAA_TOKEN_HERE*
 ```
 
-**3.Running the Script and Locating Saved Raw Data**  
+**3.Running the Script and Locating Saved Raw Data**    
+  
 Once both manual and credential steps are done, everything else is automatic. Just run the script:
 ```bash
 cd DataScraping
