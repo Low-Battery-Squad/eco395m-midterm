@@ -109,6 +109,14 @@ RenewableShare_Clean.csv → share of renewables
 This combined file is then used by the OLS module for regression and visualization.
 
 ### Data Analysis  
+- Fit OLS regression model and conduct diagnostic tests:
+
+```bash
+cd OLS
+python3 data_loader.py          # load cleaned dataset
+python3 ols_regression.py       # fit the model and run a series of diagnostic tests
+```
+
     
 ### Data Visualization
 - Generate the figures for model fit, coefficients, and residual diagnostics:
