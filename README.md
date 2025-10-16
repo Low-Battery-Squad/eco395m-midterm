@@ -32,7 +32,7 @@ All other data can be automatically downloaded and organized by running this sin
 **1.Downloading and Preparing the Load Dataset**  
   
 1. Visit the ERCOT official website:  
-https://www.ercot.com/mktinfo/load
+https://data.ercot.com/data-product-archive/NP6-346-CD  
 
 2. On the page, set the parameters as follows:
 Posted Start Date: 2024/01/01 00:00
@@ -138,7 +138,7 @@ By combining data from **ERCOT**, **NOAA**, and **BEA**, the project creates a c
   
 **1. Overview of Data Sources**
 
-The datasets were collected from four major sources: ERCOT’s public data portal, NOAA’s Climate Data Online (CDO) API, and manually downloaded ERCOT load archives.
+The datasets were collected from three major sources: ERCOT’s public data portal, NOAA’s Climate Data Online (CDO) API, and manually downloaded ERCOT load archives.
 Depending on data accessibility, three methods were used:  
 (1) direct URL download within Python scripts,  
 (2) manual download from the ERCOT portal, and  
