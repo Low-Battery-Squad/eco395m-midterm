@@ -1,6 +1,7 @@
 # ECO 395m Midterm Project: Texas Energy Market Analytics
 
 **Group Members:** Linyao(Bob) Ni, Zhifang Luo, Zongshuai Shen, Jiajie Wang  
+  
 This project analyzes how electricity prices in the Texas ERCOT market respond to variations in demand, weather, and renewable energy generation.
 By integrating multiple real-world datasets — including ERCOT market data, NOAA weather observations, and ERCOT fuel mix reports — we construct a unified daily dataset for the year 2024.  
 
